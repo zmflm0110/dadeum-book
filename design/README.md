@@ -5,6 +5,7 @@
 - `gen/` — 생성기(`brand.py` · `export.py` · `motion.py` · `boards.py` · `metrics.py`). PR의 `src/`와 같습니다.
 - `release/` — 후보 4종 전체 출력(macOS `DaDeum.icns` 포함)
 - `boards/` — 가이드 보드 이미지
+- `concepts/` — 탐색 시안 기록(ㄷ 단독, 통나무·결 무늬, 체크 3종 등 탈락안 포함)
 
 다시 만들기:
 
