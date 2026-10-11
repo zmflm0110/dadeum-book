@@ -3,3 +3,5 @@ build-qa.html
 build-easy.html
 build-readme.html
 .DS_Store
+__pycache__/
+design/boards/*.html
