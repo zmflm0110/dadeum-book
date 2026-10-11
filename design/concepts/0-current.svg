@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- The 다듬 mark: a hexagon around ㄷ, the first consonant of 다듬.
+       Only two colours, both from design/tokens.md - ink and paper. This
+       product has no accent colour and the mark is not an exception.
+       The icon PNGs are generated from this file: scripts/build-icons.sh -->
+  <path d="M50 7 L87.2 28.5 L87.2 71.5 L50 93 L12.8 71.5 L12.8 28.5 Z"
+        fill="#131316" stroke="#131316" stroke-width="11" stroke-linejoin="round"/>
+  <path d="M34 30 H70 M34 30 V70 M34 70 H70" fill="none" stroke="#ffffff" stroke-width="12"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
