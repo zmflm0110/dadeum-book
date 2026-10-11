@@ -145,28 +145,36 @@ KO_GAP = 3.2
 
 
 # ── 글리프(타일 위에 놓이는 형상) ────────────────────────────────────
+# 움직임은 CSS 애니메이션으로 둔다. 기본 상태가 '완성된 모습'이라 애니메이션이 돌지 않는 곳
+# (일부 <img> 표시·미리보기·썸네일)에서도 비어 보이지 않고, '동작 줄이기' 설정을 존중한다.
+# (처음에는 SMIL 로 기본값을 빈 상태로 두었는데, 헤드리스 Chrome 의 <img> 렌더에서 점 하나로 멈춰 있었다.)
+# 체크는 '밑줄'에서 시작한다: 첫 프레임에 밑줄 구간(경로 길이의 20.47%)이 이미 보인다.
+# 첫 프레임만 찍는 렌더러(Quick Look 등)에서도 빈 타일이 아니라 밑줄이 보인다.
+ANIM_CSS = """<style>
+    .draw{stroke-dasharray:100;stroke-dashoffset:0;animation:draw .85s cubic-bezier(.2,.8,.2,1) both}
+    @keyframes draw{0%,17.6%{stroke-dashoffset:79.5}100%{stroke-dashoffset:0}}
+    .blink{animation:blink 1.7s linear both}
+    @keyframes blink{0%,17.65%{opacity:1}38.24%{opacity:.25}58.82%{opacity:1}79.41%{opacity:.25}100%{opacity:1}}
+    @media (prefers-reduced-motion: reduce){.draw,.blink{animation:none}}
+  </style>"""
+
+
 def g_check(color, w, shadow, animated=False) -> str:
     f = ' filter="url(#f-sh)"' if shadow else ''
-    anim = ''
-    extra = ''
-    if animated:
-        extra = ' pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"'
-        anim = ('<animate attributeName="stroke-dashoffset" from="100" to="0" dur="0.7s" begin="0.15s" '
-                'fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.2 0.8 0.2 1"/>')
+    extra = ' class="draw" pathLength="100"' if animated else ''
     return (f'<g transform="translate(0 -4.5)"{f}><path d="M21 71 H40.5 L52.5 82 L79.5 29" fill="none" '
-            f'stroke="{color}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round"{extra}>{anim}</path></g>')
+            f'stroke="{color}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round"{extra}/></g>')
 
 
 def g_da(color, accent, w, shadow, animated=False) -> str:
     f = ' filter="url(#f-sh)"' if shadow else ''
     half = w / 2
-    anim = ('<animate attributeName="opacity" values="1;.25;1;.25;1" keyTimes="0;.25;.5;.75;1" dur="1.4s" '
-            'begin="0.3s" fill="freeze"/>') if animated else ''
+    cls = ' class="blink"' if animated else ''   # 커서처럼 두 번 흐려짐 — 0까지 끄면 "디"로 읽힌다
     return (f'<g transform="translate(-3 0)"{f}>'
             f'<path d="M51.5 31.5 H29.5 V68.5 H51.5" fill="none" stroke="{color}" stroke-width="{w}" '
             f'stroke-linejoin="miter" stroke-miterlimit="4"/>'
             f'<path d="M65.5 22 V78" fill="none" stroke="{color}" stroke-width="{w}"/>'
-            f'<path d="M{65.5 + half:.2f} 50 H81.5" fill="none" stroke="{accent}" stroke-width="{w}">{anim}</path></g>')
+            f'<path d="M{65.5 + half:.2f} 50 H81.5" fill="none" stroke="{accent}" stroke-width="{w}"{cls}/></g>')
 
 
 def g_dd(c1, c2, o2, shadow) -> str:
@@ -269,7 +277,7 @@ def build(out: str) -> None:
             svg(m["white"](), f"<defs>{mask}</defs>" if mask else "", T + " (흰색)", Dsc))
         if m["animated"]:
             open(os.path.join(d, "mark-animated.svg"), "w").write(
-                svg(tile_rich() + m["animated"](), defs_rich(mask), T + " (움직임)", Dsc))
+                svg(tile_rich() + m["animated"](), ANIM_CSS + defs_rich(mask), T + " (움직임)", Dsc))
 
         # 락업: 가로(마크 100 + 간격 24 + 워드마크 높이 52), 세로(마크 위, 워드마크 아래)
         for theme, fill, acc in (("light", INK, ELEC), ("dark", IVORY, SIGN)):

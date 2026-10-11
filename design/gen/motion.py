@@ -40,11 +40,12 @@ def gif(frames, durations, path, size=240):
 
 if __name__ == "__main__":
     root = sys.argv[1] if len(sys.argv) > 1 else "release"
-    # 체크: 0.15초 빈 타일 → 0.7초 그려짐(25fps) → 1.4초 유지
-    fr, du = [check_frame(0)], [150]
+    # 체크: 밑줄만 보이는 상태 0.15초 → 0.7초 동안 체크로 솟음(25fps) → 1.4초 유지
+    U = 0.2047   # 밑줄 구간 = 경로 길이의 비율 (brand.ANIM_CSS 와 같은 값)
+    fr, du = [check_frame(U)], [150]
     n = 18
     for i in range(1, n+1):
-        fr.append(check_frame(bezier_ease(i/n))); du.append(int(700/n))
+        fr.append(check_frame(U + (1-U)*bezier_ease(i/n))); du.append(int(700/n))
     fr.append(check_frame(1)); du.append(1400)
     gif(fr, du, os.path.join(root, "4-check", "motion.gif"))
     # 다: 커서처럼 두 번 흐려졌다 켜진 채로 멈춘다(0까지 끄지 않는다)
