@@ -16,6 +16,7 @@
 | **질문에 답해야 하는 사람** | `다듬-질의응답.pdf` | 질문 176개 + 숫자 치트시트 |
 | **코드를 이해하고 싶은 사람** | `다듬-완전정복.pdf` | 0~14장 교재 |
 | **용어가 어려운 사람** | 이 README의 2~6절 (또는 `다듬-README.pdf`) | 아래 |
+| **로고 후보를 보고 싶은 사람** | `design/` (다듬 PR #12의 작업 원본) | 후보 4종 · 생성기 · 전체 내보내기 |
 
 원본: `easy/` `qa/` `chapters/` (Markdown). 다시 만들기: `./build-readme.sh` `./build-easy.sh` `./build-qa.sh` `./build.sh` (pandoc + Chrome 필요)
 
